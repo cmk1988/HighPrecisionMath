@@ -56,10 +56,20 @@ namespace CMK.HighPrecisionMath
         public static RationalNumber Min(RationalNumber a, RationalNumber b) => a.Value <= b.Value ? a : b;
         public static RationalNumber Max(RationalNumber a, RationalNumber b) => a.Value >= b.Value ? a : b;
 
-        public override string ToString() => Value.ToString(CultureInfo.InvariantCulture);
+        public override string ToString() => ToString(true);
+
+        public string ToString(bool asFraction)
+        {
+            if (asFraction)
+                return $"{Numerator}/{Denominator}";
+            return Value.ToString();
+        }
 
         private static decimal BigIntegerToDecimal(BigInteger numerator, BigInteger denominator)
         {
+            if (numerator.IsZero) return 0m;
+            if (denominator.IsZero) throw new DivideByZeroException();
+
             int numeratorDigits = (int)BigInteger.Log10(BigInteger.Abs(numerator)) + 1;
             int denominatorDigits = (int)BigInteger.Log10(BigInteger.Abs(denominator)) + 1;
 

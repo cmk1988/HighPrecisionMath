@@ -43,22 +43,15 @@ namespace CMK.HighPrecisionMath
 
         public static bool operator !=(RationalNumber a, RationalNumber b) => !(a == b);
 
-        public static bool operator <(RationalNumber a, RationalNumber b)
+        public int CompareTo(RationalNumber other)
         {
-            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
-                throw new ArgumentNullException();
-
-            // Brüche auf gemeinsamen Nenner bringen und Zähler vergleichen
-            return a.Numerator * b.Denominator < b.Numerator * a.Denominator;
+            if (other is null) return 1; // null < this
+            return (Numerator * other.Denominator).CompareTo(other.Numerator * Denominator);
         }
 
-        public static bool operator >(RationalNumber a, RationalNumber b)
-        {
-            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
-                throw new ArgumentNullException();
+        public static bool operator <(RationalNumber a, RationalNumber b) => a.CompareTo(b) < 0;
 
-            return a.Numerator * b.Denominator > b.Numerator * a.Denominator;
-        }
+        public static bool operator >(RationalNumber a, RationalNumber b) => a.CompareTo(b) > 0;
 
         public static bool operator <=(RationalNumber a, RationalNumber b)
         {
@@ -74,8 +67,7 @@ namespace CMK.HighPrecisionMath
 
         public bool Equals(RationalNumber? other)
         {
-            if (other == null) return false;
-            return Numerator == other.Numerator && Denominator == other.Denominator;
+            return Numerator == other?.Numerator && Denominator == other?.Denominator;
         }
 
         public override int GetHashCode() => HashCode.Combine(Numerator, Denominator);
